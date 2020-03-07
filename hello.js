@@ -3,19 +3,11 @@ const app = express()
 const wiki = require('./wiki')
 const port = 3000
 
-// an example middleware
-const nextMiddlewre = (req, res, next) => {
-  next()
-}
+// serving static files from the public folder
+app.use(express.static('public'))
 
-// with out the route, apply to all
-app.use(nextMiddlewre)
-
-// any method, sp route
-app.use('/wiki/', nextMiddlewre)
-
-// specific method, sp route
-app.get('/', nextMiddlewre)
+// using another file
+app.use(express.static('media'))
 
 app.get('/', (req, res) => {
   res.send('home page')
