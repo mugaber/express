@@ -1,17 +1,13 @@
 const express = require('express')
 const app = express()
-
+const wiki = require('./wiki')
 const port = 3000
 
-// will be called to all request
-app.all('/secret', (req, res, next) => {
-  res.send('accessing secret route')
-  next() // passing the control to the next middleware
+app.get('/', (req, res) => {
+  res.send('home page')
 })
 
-app.get('/', (req, res) => {
-  res.send('Hello world!')
-})
+app.use('/wiki', wiki)
 
 app.listen(port, () => {
   console.log('Server Running on port ' + port)
