@@ -1,13 +1,18 @@
-const http = require('http')
+const express = require('express')
+const app = express()
 
-const hostname = '127.0.0.1'
 const port = 3000
 
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text-plain' })
-  res.end('Hello world')
+// will be called to all request
+app.all('/secret', (req, res, next) => {
+  res.send('accessing secret route')
+  next() // passing the control to the next middleware
 })
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}`)
+app.get('/', (req, res) => {
+  res.send('Hello world!')
+})
+
+app.listen(port, () => {
+  console.log('Server Running on port ' + port)
 })
