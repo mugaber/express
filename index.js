@@ -1,51 +1,62 @@
+const bodyParser = require('body-parser')
 const express = require('express')
-const path = require('path')
+require('dotenv').config() // to be able to use .env shell file
 
 const app = express()
 const port = 3000
 
-// using body-parser for parsing data sent by post in the body
-const bodyParser = require('body-parser')
-app.use(bodyParser.urlencoded({ extended: false }))
-
-// handle post req with data in the body
-// we can ommit next because json ends the loop anyway
-app.post('/name', function(req, res) {
-  res.json({ name: `${req.body.first} ${req.body.last}` })
+// connect to mongo database
+const mongoose = require('mongoose')
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 })
 
-//
+const db = mongoose.connection
+db.on('error', console.error.bind(console, 'connection error'))
+db.once('open', function() {
+  console.log('database connected')
+})
+
+// creating an instance using the model
+const Person = require('./models/person')
+const muhamed = new Person({ name: 'muhamed', age: 23 })
+
+// save to the db
+muhamed.save(function(err, data) {
+  if (err) return console.error(err)
+  console.log('saved to db', data)
+})
+
+// creating a lot of instances and saving them
+const arrayOfPeople = [
+  { name: 'ahmed', age: 20 },
+  { name: 'am', age: 30 }
+]
+Person.create(arrayOfPeople, callback)
+
+// access the data
+const callback = function(err, data) {
+  if (err) return console.error(err)
+  console.log(data)
+}
+
+Person.find(callback) // returns array of documents
+
+Person.find({ name: 'muhamed' }, callback) // array of matched docs
+
+// logger
 app.get('/', function(req, res, next) {
   console.log(req.method, req.path, req.ip)
   next()
 })
 
-// middleware chaining
-app.get(
-  '/time',
-  function(req, res, next) {
-    res.time = new Date().toString()
-    next()
-  },
-  function(req, res) {
-    res.json({ time: req.time })
-  }
-)
-
-// using uri params
-app.get('/:word/echo', function(req, res) {
-  res.json({ word: req.params.word })
-})
-
-// send files
-app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname, 'public/index.html'))
-})
-
-// serving static files route optional
+// serving static files
 app.use(express.static(__dirname + '/public'))
 
 // run the server
 app.listen(port, function(req, res) {
   console.log(`Server running on port ${port}`)
 })
+
+// tab nine
