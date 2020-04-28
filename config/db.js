@@ -4,6 +4,7 @@ module.exports = function () {
   try {
     mongoose
       .connect(process.env.DB_URI, {
+        useCreateIndex: true,
         useNewUrlParser: true,
         useUnifiedTopology: true,
       })

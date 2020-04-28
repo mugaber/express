@@ -1,2 +1,3 @@
-- DB connection using mongoose
-- User Model
+- routes: users -> register, auth, login
+- middlewares: auth
+- notes: http, middlewares, requerst, routes, user, validation
