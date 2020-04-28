@@ -1,3 +1,3 @@
-# express-basics
+# express
 
-here i am going to right the new things that i learn about express
+here i'm going to document the things that i know and learn about express, mongoDB and back-end related stuff
